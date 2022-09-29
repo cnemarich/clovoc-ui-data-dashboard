@@ -2,14 +2,8 @@
 # This moudle extracts and tabulates FHIR resources from CLOVoc FHIR API
 #
 
-setwd(getwd())
-source("common.R", local = TRUE)
-
-# Load environmental variables
-load_dot_env()
-
 # Get FHIR credentails
-fhir_api_url <- "https://clovoc-api-fhir-service-dev.kf-strides.org/"
+fhir_api_url <- Sys.getenv("CLOVOC_API_URL")
 fhir_api_cookie <- Sys.getenv("CLOVOC_FHIR_API_COOKIE")
 
 # Define headers

@@ -2,14 +2,8 @@
 # This moudle extracts and tabulates FHIR resources from INCLUDE FHIR API
 #
 
-setwd(getwd())
-source("common.R", local = TRUE)
-
-# Load environmental variables
-load_dot_env()
-
 # Get FHIR credentails
-fhir_api_url <- "https://include-api-fhir-service.includedcc.org/"
+fhir_api_url <- Sys.getenv("INCLUDE_API_URL")
 fhir_api_cookie <- Sys.getenv("INCLUDE_FHIR_API_COOKIE")
 
 # Define parameters and headers

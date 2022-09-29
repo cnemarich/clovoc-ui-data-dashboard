@@ -1,0 +1,6 @@
+Sys.setenv("CLOVOC_API_URL" = "https://clovoc-api-fhir-service-dev.kf-strides.org/")
+Sys.setenv("INCLUDE_API_URL" = "https://include-api-fhir-service.includecc.org/")
+Sys.setenv("CLOVOC_FHIR_API_COOKIE" = "XXXXXXXXX")
+Sys.setenv("INCLUDE_FHIR_API_COOKIE" = "XXXXXXXXX")
+
+source("renv/activate.R")

@@ -2,8 +2,6 @@
 # Global environmental variables
 #
 
-source("common.R", local = TRUE)
-
 source("./api_tabulation_plugins/include_api_fhir_service.R", local = TRUE)
 source("./api_tabulation_plugins/clovoc_api_fhir_service.R", local = TRUE)
 

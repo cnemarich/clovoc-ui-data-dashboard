@@ -1,5 +1,4 @@
 source("global.R", local = TRUE)
-source("common.R", local = TRUE)
 
 # UI component
 ui <- navbarPage(
