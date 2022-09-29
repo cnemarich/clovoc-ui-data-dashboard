@@ -17,7 +17,7 @@ groups <- request_and_flatten(
   fhir_api_url = fhir_api_url,
   resource = "Group",
   cookies = cookies,
-  cols = c(
+  desc_cols = c(
     "ResearchStudy Identifier" = "meta/tag/code",
     "Group Identifier System" = "identifier/system",
     "Group Identifier Value" = "identifier/value",
@@ -47,9 +47,6 @@ groups <- fhircrackr::fhir_melt(
 # Remove indices
 groups <- fhircrackr::fhir_rm_indices(groups, brackets = c("<<", ">>"))
 
-# Replace NA with empty string
-groups <- ReplaceNA(groups)
-
 # Filter rows
 group_filter <- "https://kf-api-dataservice.kidsfirstdrc.org/families/"
 groups <- groups[groups$"Group Identifier System" != group_filter, ]
@@ -71,37 +68,18 @@ patients <- request_and_flatten(
   fhir_api_url = fhir_api_url,
   resource = "Patient",
   cookies = cookies,
-  cols = c(
+  desc_cols = c(
     "Patient ID" = "id",
     "Patient Identifier System" = "identifier/system",
     "Patient Identifier Value" = "identifier/value",
     "Race ~ Ethnicity" = "extension/extension/valueString",
     "Gender" = "gender"
   ),
+  drop_cols = c("Patient Identifier System",
+                "Patient Identifier Value",
+                "Patient Identifier"),
   format = "wide"
 )
-
-# Drop columns
-patients <- within(
-    patients,
-    rm("<<1.1>>Patient Identifier System", "<<1.1>>Patient Identifier Value")
-)
-
-# Change column names
-setnames(
-    patients,
-    old = c(
-        "<<1>>Patient ID",
-        "<<2.1>>Patient Identifier Value",
-        "<<1.1.1>>Race ~ Ethnicity",
-        "<<2.1.1>>Race ~ Ethnicity",
-        "<<1>>Gender"
-    ),
-    new = c("Patient ID", "Patient Identifier", "Race", "Ethnicity", "Gender")
-)
-
-# Replace NA with empty string
-patients <- ReplaceNA(patients)
 
 # Right-join groups and patients on Patient ID
 patients <- merge(
@@ -109,7 +87,7 @@ patients <- merge(
 )
 
 # Cache Patient IDs and Identifiers
-patient_ids <- patients[, c("Patient ID", "Patient Identifier")]
+patient_ids <- patients[, c("Patient ID", )]
 
 # Drop columns
 patients <- within(patients, rm("Patient ID"))
@@ -120,7 +98,7 @@ conditions <- request_and_flatten(
   fhir_api_url = fhir_api_url,
   resource = "Condition",
   cookies = cookies,
-  cols = c(
+  desc_cols = c(
     "Patient ID" = "subject/reference",
     "Clinical Status" = "clinicalStatus/text",
     "Verification Status" = "verificationStatus/text",
@@ -163,7 +141,7 @@ specimens <- request_and_flatten(
   fhir_api_url = fhir_api_url,
   resource = "Specimen",
   cookies = cookies,
-  cols = c(
+  desc_cols = c(
     "Patient ID" = "subject/reference",
     "Specimen Identifier System" = "identifier/system",
     "Specimen Identifier Value" = "identifier/value",
@@ -175,29 +153,14 @@ specimens <- request_and_flatten(
     "Body Site Ontology URI" = "collection/bodySite/coding/system",
     "Body Site Code" = "collection/bodySite/coding/code"
   ),
+  drop_cols = c(
+    "Specimen Identifier System",
+    "Specimen Identifier Value",
+    "Specimen Identifier Value"
+  )
   format = "compact"
 )
 
-# Change column names
-setnames(
-    specimens,
-    old = c(
-        "<<1.1>>Patient ID",
-        "<<1.1>>Specimen Identifier Value",
-        "<<1>>Specimen Status",
-        "<<1.1>>Specimen Type Name",
-        "<<1.1.1>>Specimen Type Ontology URI",
-        "<<1.1.1>>Specimen Type Code"
-    ),
-    new = c(
-        "Patient ID",
-        "Specimen Identifier",
-        "Specimen Status",
-        "Specimen Type Name",
-        "Specimen Type Ontology URI",
-        "Specimen Type Code"
-    )
-)
 
 # Extract patient IDs
 specimens$"Patient ID" <- unlist(
@@ -214,15 +177,7 @@ specimens <- merge(
 )
 
 # Drop columns
-specimens <- within(
-    specimens,
-    rm(
-        "Patient ID",
-        "<<2.1>>Specimen Identifier System",
-        "<<2.1>>Specimen Identifier Value",
-        "<<3.1>>Specimen Identifier Value"
-    )
-)
+specimens <- within(specimens, rm("Patient ID"))
 
 # Replace NA with empty string
 specimens <- ReplaceNA(specimens)
@@ -242,29 +197,6 @@ document_references <- request_and_flatten(
     "URL" = "content/attachment/url"
   ),
   format = "compact"
-)
-
-# Change column names
-setnames(
-    document_references,
-    old = c(
-        "<<1.1>>Patient ID",
-        "<<1>>DocumentReference Status",
-        "<<1>>Document Status",
-        "<<1.1>>Document Type",
-        "<<1.1.1>>Experiment Strategy ~ Data Category",
-        "<<2.1.1>>Experiment Strategy ~ Data Category",
-        "<<1.1.1>>URL"
-    ),
-    new = c(
-        "Patient ID",
-        "DocumentReference Status",
-        "Document Status",
-        "Document Type",
-        "Experiment Strategy",
-        "Data Category",
-        "URL"
-    )
 )
 
 # Extract patient IDs

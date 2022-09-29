@@ -20,6 +20,7 @@ groups <- request_and_flatten(
     "Group Identifier" = "identifier/value",
     "Patient ID" = "member/entity/reference"
   ),
+  drop_cols = "resource_identifier",
   format = "compact"
 )
 
@@ -37,19 +38,13 @@ groups <- fhircrackr::fhir_rm_indices(groups, brackets = c("<<", ">>"))
 # Extract patient IDs
 groups$"Patient ID" <- unlist(lapply(groups$"Patient ID", ParsePatientID))
 
-# Drop columns
-groups <- within(groups, rm("resource_identifier"))
-
-# Replace NA with empty string
-groups <- ReplaceNA(groups)
-
 
 # /Patient
 patients <- request_and_flatten(
   fhir_api_url = fhir_api_url,
   resource = "Patient",
   cookies = cookies,
-  cols = c(
+  desc_cols = c(
     "Patient ID" = "id",
     "Patient Identifier" = "identifier/value",
     "Race ~ Ethnicity" = "extension/extension/valueString",
@@ -57,22 +52,6 @@ patients <- request_and_flatten(
   ),
   format = "wide"
 )
-
-# Change column names
-setnames(
-    patients,
-    old = c(
-        "<<1>>Patient ID",
-        "<<1.1>>Patient Identifier",
-        "<<1.1.1>>Race ~ Ethnicity",
-        "<<2.1.1>>Race ~ Ethnicity",
-        "<<1>>Gender"
-    ),
-    new = c("Patient ID", "Patient Identifier", "Race", "Ethnicity", "Gender")
-)
-
-# Replace NA with empty string
-patients <- ReplaceNA(patients)
 
 # Right-join groups and patients on Patient ID
 patients <- merge(
@@ -91,7 +70,7 @@ conditions <- request_and_flatten(
   fhir_api_url = fhir_api_url,
   resource = "Condition",
   cookies = cookies,
-  cols = c(
+  desc_cols = c(
     "Patient ID" = "subject/reference",
     "Clinical Status" = "clinicalStatus/text",
     "Verification Status" = "verificationStatus/text",
@@ -177,7 +156,7 @@ document_references <- request_and_flatten(
   fhir_api_url = fhir_api_url,
   resource = "DocumentReference",
   cookies = cookies,
-  cols = c(
+  desc_cols = c(
     "Patient ID" = "subject/reference",
     "DocumentReference Status" = "status",
     "Document Status" = "docStatus",
