@@ -5,14 +5,6 @@
 setwd(getwd())
 source("common.R", local = TRUE)
 
-# Install or load dependencies
-required_packages <- c(
-    "dotenv",
-    "fhircrackr",
-    "data.table"
-)
-LoadRequiredPackages(required_packages)
-
 # Load environmental variables
 load_dot_env()
 

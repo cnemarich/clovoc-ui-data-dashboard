@@ -4,10 +4,6 @@
 
 source("common.R", local = TRUE)
 
-# Install or load dependencies
-required_packages <- c("dplyr")
-LoadRequiredPackages(required_packages)
-
 source("./api_tabulation_plugins/include_api_fhir_service.R", local = TRUE)
 source("./api_tabulation_plugins/clovoc_api_fhir_service.R", local = TRUE)
 
