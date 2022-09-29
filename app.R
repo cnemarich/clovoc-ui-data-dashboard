@@ -43,10 +43,10 @@ server <- function(input, output) {
     })
 
     output$download <- downloadHandler(
-        file_name <- function() {
+        file_name = function() {
             paste(input$table, "tsv", sep = ".")
         },
-        content <- function(file) {
+        content = function(file) {
             write.table(
                 data_input(), file, sep = "\t", row.names = FALSE
             )
