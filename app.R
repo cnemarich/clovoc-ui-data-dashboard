@@ -1,5 +1,3 @@
-source("global.R", local = TRUE)
-
 # UI component
 ui <- navbarPage(
     "CLOVoc Data Dashboard",

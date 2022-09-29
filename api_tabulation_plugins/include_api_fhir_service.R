@@ -27,7 +27,7 @@ groups <- request_and_flatten(
 )
 
 # Melt columns
-groups <- fhir_melt(
+groups <- fhircrackr::fhir_melt(
     groups,
     columns = c(
         "Group Identifier System",
@@ -37,7 +37,7 @@ groups <- fhir_melt(
     brackets = c("<<", ">>"),
     all_columns = TRUE
 )
-groups <- fhir_melt(
+groups <- fhircrackr::fhir_melt(
     groups, columns = c("Patient ID"),
     sep = " ~ ",
     brackets = c("<<", ">>"),
@@ -45,7 +45,7 @@ groups <- fhir_melt(
 )
 
 # Remove indices
-groups <- fhir_rm_indices(groups, brackets = c("<<", ">>"))
+groups <- fhircrackr::fhir_rm_indices(groups, brackets = c("<<", ">>"))
 
 # Replace NA with empty string
 groups <- ReplaceNA(groups)
@@ -135,7 +135,7 @@ conditions <- request_and_flatten(
 )
 
 # Remove indices
-conditions <- fhir_rm_indices(conditions, brackets = c("<<", ">>"))
+conditions <- fhircrackr::fhir_rm_indices(conditions, brackets = c("<<", ">>"))
 
 # Extract patient IDs
 conditions$"Patient ID" <- unlist(

@@ -24,7 +24,7 @@ groups <- request_and_flatten(
 )
 
 # Melt columns
-groups <- fhir_melt(
+groups <- fhircrackr::fhir_melt(
     groups, columns = c("Patient ID"),
     sep = " ~ ",
     brackets = c("<<", ">>"),
@@ -32,7 +32,7 @@ groups <- fhir_melt(
 )
 
 # Remove indices
-groups <- fhir_rm_indices(groups, brackets = c("<<", ">>"))
+groups <- fhircrackr::fhir_rm_indices(groups, brackets = c("<<", ">>"))
 
 # Extract patient IDs
 groups$"Patient ID" <- unlist(lapply(groups$"Patient ID", ParsePatientID))
@@ -106,7 +106,7 @@ conditions <- request_and_flatten(
 )
 
 # Remove indices
-conditions <- fhir_rm_indices(conditions, brackets = c("<<", ">>"))
+conditions <- fhircrackr::fhir_rm_indices(conditions, brackets = c("<<", ">>"))
 
 # Extract patient IDs
 conditions$"Patient ID" <- unlist(
@@ -149,7 +149,7 @@ specimens <- request_and_flatten(
 )
 
 # Remove indices
-specimens <- fhir_rm_indices(specimens, brackets = c("<<", ">>"))
+specimens <- fhircrackr::fhir_rm_indices(specimens, brackets = c("<<", ">>"))
 
 # Replace NA with empty string
 specimens <- ReplaceNA(specimens)
@@ -190,7 +190,7 @@ document_references <- request_and_flatten(
 )
 
 # Remove indices
-document_references <- fhir_rm_indices(
+document_references <- fhircrackr::fhir_rm_indices(
     document_references, brackets = c("<<", ">>")
 )
 
