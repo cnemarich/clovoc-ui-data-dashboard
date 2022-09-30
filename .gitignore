@@ -49,3 +49,4 @@ renv/
 
 # Miscellaneous
 .DS_Store
+.Rproj.user
