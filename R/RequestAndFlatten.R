@@ -1,4 +1,4 @@
-request_and_flatten <- function(fhir_api_url = NULL,
+RequestAndFlatten <- function(fhir_api_url = NULL,
                         resource = NULL,
                         cookies = NULL,
                         desc_cols = NULL,
