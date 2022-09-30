@@ -1,3 +1,5 @@
+library(shiny)
+
 # UI component
 ui <- navbarPage(
   "CLOVoc Data Dashboard",
